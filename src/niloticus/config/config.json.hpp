@@ -5,7 +5,8 @@
 #import <string>
 #import <system_error>
 
-namespace fs = std::filesystem;
+//! Deps
+#include "niloticus/base/base.hpp"
 
 //! Constants
 namespace

@@ -9,14 +9,25 @@ find_package(spdlog CONFIG REQUIRED)
 find_package(unofficial-http-parser CONFIG REQUIRED)
 find_package(doctest CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
-
+find_package(date CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME}_shared_deps STATIC)
-target_link_libraries(${PROJECT_NAME}_shared_deps PUBLIC restinio::restinio PRIVATE spdlog::spdlog nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME}_shared_deps PUBLIC restinio::restinio PRIVATE
+        spdlog::spdlog
+        nlohmann_json::nlohmann_json
+        date::date
+        date::date-tz)
 target_include_directories(${PROJECT_NAME}_shared_deps PUBLIC src)
 target_sources(${PROJECT_NAME}_shared_deps PRIVATE
+        ##base
+        src/niloticus/base/base.cpp
+
         ##config
-        src/niloticus/config/config.json.cpp)
+        src/niloticus/config/config.json.cpp
+
+        ##logging
+        src/niloticus/log/logging.cpp
+        )
 add_library(${PROJECT_NAME}::shared_deps ALIAS ${PROJECT_NAME}_shared_deps)
 
 add_executable(${PROJECT_NAME})
@@ -26,8 +37,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}::shared_deps)
 
 add_executable(${PROJECT_NAME}_tests)
 target_sources(${PROJECT_NAME}_tests PRIVATE tests/main.tests.cpp
+        ##base
+        tests/base/base.tests.cpp
         ## config
-        tests/config/config.tests.cpp)
+        tests/config/config.tests.cpp
+        ##logging
+        tests/logging/logging.tests.cpp)
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE
         ${PROJECT_NAME}::shared_deps
         doctest::doctest)
