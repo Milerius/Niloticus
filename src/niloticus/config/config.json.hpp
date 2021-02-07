@@ -21,5 +21,5 @@ namespace niloticus
         std::string   hostname{"localhost"};
     };
 
-    config parse_cfg(std::error_code& ec, fs::path cfg_path = fs::current_path() / cfg_filename, bool force_create = true) noexcept;
+    config parse_cfg(const fs::path& cfg_path = fs::current_path() / cfg_filename, bool force_create = true) noexcept;
 } // namespace niloticus

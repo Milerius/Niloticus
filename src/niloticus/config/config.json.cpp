@@ -16,6 +16,8 @@ namespace details
     void
     from_json(const nlohmann::json& j, niloticus::config& cfg)
     {
+        j.at("port").get_to(cfg.port);
+        j.at("hostname").get_to(cfg.hostname);
     }
 
     void
@@ -29,15 +31,26 @@ namespace details
 namespace niloticus
 {
     config
-    parse_cfg(std::error_code& ec, fs::path cfg_path, bool force_create) noexcept
+    parse_cfg(const fs::path& cfg_path, bool force_create) noexcept
     {
-        config cfg;
-        if (!fs::exists(cfg_path))
+        config         cfg;
+        nlohmann::json cfg_json;
+
+        if (!fs::exists(cfg_path)) ///< //! File doesn't exist let's create it
         {
-            std::ofstream  ofs(cfg_path);
-            nlohmann::json cfg_json;
-            details::to_json(cfg_json, cfg);
-            ofs << cfg_json.dump(4);
+            if (force_create)
+            {
+                std::ofstream ofs(cfg_path);
+
+                details::to_json(cfg_json, cfg);
+                ofs << cfg_json.dump(4);
+            }
+        }
+        else
+        {
+            std::ifstream ifs(cfg_path);
+            cfg_json = nlohmann::json::parse(ifs);
+            details::from_json(cfg_json, cfg);
         }
         return cfg;
     }
