@@ -17,7 +17,7 @@ namespace niloticus
 {
     struct config
     {
-        std::uint16_t port{6666};
+        std::uint16_t port{7733};
         std::string   hostname{"localhost"};
     };
 

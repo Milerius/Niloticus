@@ -12,7 +12,7 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 
 add_library(${PROJECT_NAME}_shared_deps STATIC)
-target_link_libraries(${PROJECT_NAME}_shared_deps PRIVATE restinio::restinio spdlog::spdlog nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME}_shared_deps PUBLIC restinio::restinio PRIVATE spdlog::spdlog nlohmann_json::nlohmann_json)
 target_include_directories(${PROJECT_NAME}_shared_deps PUBLIC src)
 target_sources(${PROJECT_NAME}_shared_deps PRIVATE
         ##config

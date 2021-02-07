@@ -19,7 +19,7 @@ SCENARIO("cfg parsing")
 
     auto common_test_functor = [](auto&& cfg) {
         CHECK_EQ(cfg.hostname, "localhost");
-        CHECK_EQ(cfg.port, 6666);
+        CHECK_EQ(cfg.port, 7733);
     };
 
     auto common_file_creation_functor = [supposed_cfg_path]() {
