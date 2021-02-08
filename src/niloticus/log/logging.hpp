@@ -5,8 +5,10 @@
 #endif
 #include <spdlog/spdlog.h>
 
+#include "niloticus/base/base.hpp"
+
 namespace niloticus
 {
-    bool init_logging() noexcept;
+    bool     init_logging() noexcept;
     fs::path get_log_filepath() noexcept;
-}
+} // namespace niloticus
