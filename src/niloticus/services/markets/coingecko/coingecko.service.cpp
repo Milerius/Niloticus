@@ -8,10 +8,16 @@ namespace niloticus
         //!
         SPDLOG_INFO("coingecko_service created");
     }
+
     void
     coingecko_service::update() noexcept
     {
         //! Nothing for the moment
     }
-    coingecko_service::~coingecko_service() noexcept { SPDLOG_INFO("coingecko_service destroyed"); }
+
+    coingecko_service::~coingecko_service() noexcept
+    {
+        //!
+        SPDLOG_INFO("coingecko_service destroyed");
+    }
 } // namespace niloticus

@@ -52,7 +52,10 @@ target_sources(${PROJECT_NAME}_tests PRIVATE tests/main.tests.cpp
         ## config
         tests/config/config.tests.cpp
         ##logging
-        tests/logging/logging.tests.cpp)
+        tests/logging/logging.tests.cpp
+        ##! services
+        tests/services/markets/coingecko.services.tests.cpp
+        )
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE
         ${PROJECT_NAME}::shared_deps
         doctest::doctest)
