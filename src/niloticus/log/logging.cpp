@@ -25,14 +25,14 @@ namespace
 namespace details
 {
     fs::path
-    get_current_log_file()
+    get_current_log_file(const char* filename)
     {
         using namespace std::chrono;
         using namespace date;
         static auto              timestamp = duration_cast<seconds>(system_clock::now().time_since_epoch()).count();
         static date::sys_seconds tp{seconds{timestamp}};
         static std::string       s = date::format("%Y-%m-%d-%H-%M-%S", tp);
-        g_log_path                 = niloticus::get_generic_logs_folder() / (s + ".log");
+        g_log_path                 = niloticus::get_generic_logs_folder() / (s + "." + filename + ".log");
         return g_log_path;
     }
 } // namespace details
@@ -40,22 +40,22 @@ namespace details
 namespace niloticus
 {
     bool
-    init_logging() noexcept
+    init_logging(const char* filename) noexcept
     {
         //! Log Initialization
-        std::string path = details::get_current_log_file().string();
+        std::string path = details::get_current_log_file(filename).string();
         spdlog::init_thread_pool(g_qsize_spdlog, g_spdlog_thread_count);
         auto tp            = spdlog::thread_pool();
         auto stdout_sink   = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         auto rotating_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(path.c_str(), g_spdlog_max_file_size, g_spdlog_max_file_rotation);
 
         std::vector<spdlog::sink_ptr> sinks{stdout_sink, rotating_sink};
-        auto logger = std::make_shared<spdlog::async_logger>("log_mt", sinks.begin(), sinks.end(), tp, spdlog::async_overflow_policy::block);
+        auto logger = std::make_shared<spdlog::async_logger>("log_mt_" + std::string(filename), sinks.begin(), sinks.end(), tp, spdlog::async_overflow_policy::block);
         spdlog::register_logger(logger);
         spdlog::set_default_logger(logger);
         spdlog::set_level(spdlog::level::trace);
         spdlog::set_pattern("[%T] [%^%l%$] [%s:%#]: %v");
-        SPDLOG_INFO("Logger successfully initialized");
+        SPDLOG_INFO("Logger successfully initialized: {}", get_log_filepath().string());
         return true;
     }
 

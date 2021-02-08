@@ -7,11 +7,10 @@ namespace ag = antara::gaming;
 
 namespace niloticus
 {
-    class application : public ag::world::app
+    class worker_application : public ag::world::app
     {
-        //! Contructor
       public:
-        application() noexcept;
+        worker_application() noexcept;
         int start() noexcept;
     };
 } // namespace niloticus

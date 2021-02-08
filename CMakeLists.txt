@@ -15,17 +15,32 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 include(antara)
 add_subdirectory(vendor/antara-gaming_sdk/modules)
 
+##worker shared deps
+add_library(${PROJECT_NAME}_worker_shared_deps STATIC)
+target_link_libraries(${PROJECT_NAME}_worker_shared_deps PUBLIC antara::world)
+target_sources(${PROJECT_NAME}_worker_shared_deps PRIVATE
+        ## application
+        src/niloticus/application/worker.app.cpp
+
+        ## services
+        src/niloticus/services/markets/coingecko/coingecko.service.cpp)
+target_include_directories(${PROJECT_NAME}_worker_shared_deps PUBLIC src)
+add_library(${PROJECT_NAME}::worker_shared_deps ALIAS ${PROJECT_NAME}_worker_shared_deps)
+
+##server shared deps
+add_library(${PROJECT_NAME}_server_shared_deps INTERFACE)
+target_link_libraries(${PROJECT_NAME}_server_shared_deps INTERFACE restinio::restinio)
+add_library(${PROJECT_NAME}::server_shared_deps ALIAS ${PROJECT_NAME}_server_shared_deps)
 
 add_library(${PROJECT_NAME}_shared_deps STATIC)
-target_link_libraries(${PROJECT_NAME}_shared_deps PUBLIC restinio::restinio antara::world PRIVATE
+target_link_libraries(${PROJECT_NAME}_shared_deps
+        PRIVATE
         spdlog::spdlog
         nlohmann_json::nlohmann_json
         date::date
         date::date-tz)
 target_include_directories(${PROJECT_NAME}_shared_deps PUBLIC src)
 target_sources(${PROJECT_NAME}_shared_deps PRIVATE
-        ##application
-        src/niloticus/application/app.cpp
         ##base
         src/niloticus/base/base.cpp
 
@@ -34,17 +49,29 @@ target_sources(${PROJECT_NAME}_shared_deps PRIVATE
 
         ##logging
         src/niloticus/log/logging.cpp
-
-        ##services
-        src/niloticus/services/markets/coingecko/coingecko.service.cpp
         )
 add_library(${PROJECT_NAME}::shared_deps ALIAS ${PROJECT_NAME}_shared_deps)
 
-add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE
-        main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}::shared_deps)
+##! Worker executable
+add_executable(${PROJECT_NAME}_worker)
+target_sources(${PROJECT_NAME}_worker PRIVATE
+        ## main
+        cmd/worker/main.cpp)
+target_link_libraries(${PROJECT_NAME}_worker PRIVATE ${PROJECT_NAME}::shared_deps ${PROJECT_NAME}::worker_shared_deps)
 
+##! Server executable
+add_executable(${PROJECT_NAME}_server)
+target_sources(${PROJECT_NAME}_server PRIVATE
+        ##application
+        src/niloticus/application/server.application.cpp
+
+        ## main
+        cmd/server/main.cpp
+        )
+target_link_libraries(${PROJECT_NAME}_server PRIVATE ${PROJECT_NAME}::shared_deps ${PROJECT_NAME}::server_shared_deps)
+
+
+##! Tests
 add_executable(${PROJECT_NAME}_tests)
 target_sources(${PROJECT_NAME}_tests PRIVATE tests/main.tests.cpp
         ##base
@@ -58,4 +85,6 @@ target_sources(${PROJECT_NAME}_tests PRIVATE tests/main.tests.cpp
         )
 target_link_libraries(${PROJECT_NAME}_tests PRIVATE
         ${PROJECT_NAME}::shared_deps
+        ${PROJECT_NAME}::server_shared_deps
+        ${PROJECT_NAME}::worker_shared_deps
         doctest::doctest)

@@ -9,6 +9,6 @@
 
 namespace niloticus
 {
-    bool     init_logging() noexcept;
+    bool     init_logging(const char* filename = "niloticus.server") noexcept;
     fs::path get_log_filepath() noexcept;
 } // namespace niloticus
