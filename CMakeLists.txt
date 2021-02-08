@@ -23,7 +23,8 @@ target_sources(${PROJECT_NAME}_worker_shared_deps PRIVATE
         src/niloticus/application/worker.app.cpp
 
         ## services
-        src/niloticus/services/markets/coingecko/coingecko.service.cpp)
+        src/niloticus/services/markets/coingecko/coingecko.service.cpp
+        src/niloticus/services/markets/coingecko/coingecko.price.cpp)
 target_include_directories(${PROJECT_NAME}_worker_shared_deps PUBLIC src)
 add_library(${PROJECT_NAME}::worker_shared_deps ALIAS ${PROJECT_NAME}_worker_shared_deps)
 
