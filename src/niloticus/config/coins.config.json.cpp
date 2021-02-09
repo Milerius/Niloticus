@@ -12,20 +12,6 @@
 namespace niloticus
 {
     void
-    to_json(nlohmann::json& j, const electrum_server& cfg)
-    {
-        j["url"] = cfg.url;
-        if (cfg.protocol.has_value())
-        {
-            j["protocol"] = cfg.protocol.value();
-        }
-        if (cfg.disable_cert_verification.has_value())
-        {
-            j["disable_cert_verification"] = cfg.disable_cert_verification.value();
-        }
-    }
-
-    void
     from_json(const nlohmann::json& j, electrum_server& cfg)
     {
         if (j.count("protocol") == 1)
@@ -60,10 +46,6 @@ namespace niloticus
         j.at("currently_enabled").get_to(cfg.currently_enabled);
         j.at("coinpaprika_id").get_to(cfg.coinpaprika_id);
         j.at("coingecko_id").get_to(cfg.coingecko_id);
-        if (j.contains("is_custom_coin"))
-        {
-            cfg.is_custom_coin = true;
-        }
 
         j.at("explorer_url").get_to(cfg.explorer_url);
         if (j.contains("explorer_tx_url"))

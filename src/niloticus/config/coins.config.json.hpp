@@ -21,7 +21,6 @@ namespace niloticus
         std::optional<bool>        disable_cert_verification{false};
     };
 
-    void to_json(nlohmann::json& j, const electrum_server& cfg);
     void from_json(const nlohmann::json& j, electrum_server& cfg);
 
     struct coin_config

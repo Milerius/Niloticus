@@ -9,6 +9,7 @@
 
 TEST_CASE("Parse coins cfg")
 {
-    CHECK(niloticus::parse_cfg().empty());
-    CHECK_FALSE(niloticus::parse_cfg(fs::current_path() / "config_samples" / "coins.cfg.json").empty());
+    CHECK(niloticus::parse_cfg("non_existent_cfg.json").empty());
+    const auto cfg = niloticus::parse_cfg(fs::current_path() / "config_samples" / "coins.cfg.json");
+    CHECK_FALSE(cfg.empty());
 }
