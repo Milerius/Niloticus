@@ -34,7 +34,7 @@ TEST_CASE("coingecko price request build just with ids")
 
 TEST_CASE("coingecko price request with optional value")
 {
-    niloticus::api::t_coingecko_request req{.ids = {{"bitcoin"}, {"komodo"}}, .currencies = {{"usd"}, {"euro"}}, .include_last_updated_at = "true"};
+    niloticus::api::t_coingecko_request req{.ids = {{"bitcoin"}, {"komodo"}}, .currencies = {{"usd"}, {"eur"}}, .include_last_updated_at = "true"};
     const auto                          result = niloticus::to_coingecko_url(std::move(req));
-    CHECK_EQ(result, "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,komodo&vs_currencies=usd,euro&include_last_updated_at=true");
+    CHECK_EQ(result, "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,komodo&vs_currencies=usd,eur&include_last_updated_at=true");
 }

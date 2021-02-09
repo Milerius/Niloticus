@@ -47,6 +47,7 @@ target_sources(${PROJECT_NAME}_shared_deps PRIVATE
 
         ##config
         src/niloticus/config/config.json.cpp
+        src/niloticus/config/coins.config.json.cpp
 
         ##logging
         src/niloticus/log/logging.cpp
@@ -79,6 +80,7 @@ target_sources(${PROJECT_NAME}_tests PRIVATE tests/main.tests.cpp
         tests/base/base.tests.cpp
         ## config
         tests/config/config.tests.cpp
+        tests/config/coins.config.tests.cpp
         ##logging
         tests/logging/logging.tests.cpp
         ##! services
@@ -89,3 +91,10 @@ target_link_libraries(${PROJECT_NAME}_tests PRIVATE
         ${PROJECT_NAME}::server_shared_deps
         ${PROJECT_NAME}::worker_shared_deps
         doctest::doctest)
+
+add_custom_command(TARGET ${PROJECT_NAME}_tests PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/tests/services/markets/market_samples $<TARGET_FILE_DIR:${PROJECT_NAME}_tests>/market_samples)
+add_custom_command(TARGET ${PROJECT_NAME}_tests PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/tests/config/config_samples $<TARGET_FILE_DIR:${PROJECT_NAME}_tests>/config_samples)
